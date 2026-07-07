@@ -1,0 +1,31 @@
+typedef struct {
+    int key;
+    int value;
+} HashItem;
+
+int hash(int key) {
+    return abs(key) % HASH_SIZE;
+}
+
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    *returnSize = 2;
+    int* result = (int*)malloc(2 * sizeof(int));
+    HashItem* hashTable = (HashItem*)calloc(HASH_SIZE, sizeof(HashItem));
+
+    for (int i = 0; i < numsSize; i++) {
+        int complement = target - nums[i];
+        int index = hash(complement);
+        if (hashTable[index].key == complement && hashTable[index].value != 0) {
+            result[0] = hashTable[index].value - 1;
+            result[1] = i;
+            free(hashTable);
+            return result;
+        }
+        index = hash(nums[i]);
+        hashTable[index].key = nums[i];
+        hashTable[index].value = i + 1; // Store i+1 to differentiate from 0
+    }
+
+    free(hashTable);
+    return NULL;
+}
